@@ -15,7 +15,7 @@ mixin ColumnRowSpaces {
 }
 
 mixin AppPaddings {
-  static const innerPadding = 15.0;
+  static const innerPadding = 20.0;
   static const innerHorizontalPadding = 15;
   static const innerVerticalPadding = 10;
   static const outerPadding = 20.0;

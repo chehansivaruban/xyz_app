@@ -5,8 +5,8 @@ mixin AppImages {
     image: AssetImage('assets/images/header_bg.jpg'),
     fit: BoxFit.fill,
   );
-  static const Widget welcomeImage = Image(
-    image: AssetImage('assets/images/welcome_screen.png'),
+  static const Widget logoImage = Image(
+    image: AssetImage('assets/images/logo.png'),
     fit: BoxFit.fill,
   );
   static final homeIconSelected = Image.asset(
