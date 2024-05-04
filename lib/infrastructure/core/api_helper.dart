@@ -116,6 +116,7 @@ class ApiHelper {
     Response res,
     bool isExternal,
   ) async {
+    _logUtils.log("External response: ${res.statusCode}");
     switch (res.statusCode) {
       case 200:
         if (isExternal) {

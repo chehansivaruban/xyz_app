@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:kt_dart/kt.dart';
 
 import '../../domain/authentication/i_authentication_repository.dart';
 import '../../domain/authentication/login/login_request.dart';
@@ -53,10 +52,12 @@ class AuthenticationStateNotifier extends StateNotifier<AuthenticationState> {
   Future<void> login() async {
     state = state.copyWith(
       isLoading: true,
+      responseData: none(),
       responseFailure: none(),
     );
 
-    Either<Failure, LoginResponse> authenticationResponse = await _authenticationRepository.login(
+    Either<Failure, LoginResponse> authenticationResponse =
+        await _authenticationRepository.login(
       LoginRequest(
         email: state.email,
         password: state.password,
