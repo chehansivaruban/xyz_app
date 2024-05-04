@@ -52,6 +52,7 @@ class ApiHelper {
     HttpMethod method,
     String path, {
     Map<String, dynamic>? data,
+    Map<String, dynamic>? headers,
     Map<String, dynamic>? queryParameters,
     bool addDefaultParams = true,
     bool isLive = false,
@@ -67,21 +68,27 @@ class ApiHelper {
         final baseUrl = isLive ? Config.liveServerUrl : Config.serverUrl;
         dio.options.baseUrl = baseUrl;
       }
-
+      dio.options.headers['Tz'] = 'Europe/London';
       var params = isExternal
           ? <String, dynamic>{}
           : addDefaultParams
               ? await _getCommonParameters()
               : <String, dynamic>{};
       params.addAll(data ?? {});
+      var headersValue = isExternal
+          ? <String, dynamic>{}
+          : addDefaultParams
+              ? await _getCommonParameters()
+              : <String, dynamic>{};
+      headersValue.addAll(headers ?? {});
 
       final options = Options(
         method: method.name.toUpperCase(),
-        headers: params,
+        // headers: headersValue,
       );
       final res = await dio.request(
         path,
-        data: isFormData ? FormData.fromMap(params) : "",
+        data: isFormData ? FormData.fromMap(params) : data,
         queryParameters: queryParameters,
         options: options,
       );
@@ -115,7 +122,12 @@ class ApiHelper {
           _logUtils.log("External response: ${res.data}");
           return res;
         } else {
-          final response = BaseResponse.fromJson(await parseJson(res.data));
+          final responseConvert = {
+            "isSuccess": true,
+            "data": res.data,
+          };
+
+          final response = BaseResponse.fromJson(responseConvert);
 
           if (!response.isSuccess &&
               response.code == 403 &&

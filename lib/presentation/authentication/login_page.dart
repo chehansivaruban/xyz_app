@@ -1,10 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:xyz_app/presentation/core/values/style_constants.dart';
-import 'package:xyz_app/presentation/routes/app_router.gr.dart';
 
 import '../core/values/colors.dart';
+import '../core/values/images.dart';
 import '../core/values/text_styles.dart';
+import 'widgets/login_form.dart';
 
 @RoutePage()
 class LoginPage extends StatelessWidget {
@@ -14,17 +16,19 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppPaddings.innerPadding),
+        padding: const EdgeInsets.all(
+          AppPaddings.innerPadding,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(
-              height: 36,
+            SizedBox(
+              height: 36.sp,
             ),
-            Container(
-              height: 100,
-              width: 100,
-              color: AppColors.primaryGreen,
+            SizedBox(
+              height: 100.sp,
+              width: 100.sp,
+              child: AppImages.logoImage,
             ),
             const SizedBox(
               height: 50,
@@ -46,90 +50,9 @@ class LoginPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 32),
-            Text(
-              'Username/Email',
-              style: sanFranciscoRegular.copyWith(
-                fontSize: 15,
-                color: AppColors.textGrey,
-              ),
-            ),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Username',
-                labelStyle: TextStyle(
-                  color: Colors.grey[800],
-                  fontSize: 16,
-                ),
-                floatingLabelBehavior: FloatingLabelBehavior.never,
-                border: const UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: AppColors.textGrey,
-                  ),
-                ),
-                focusedBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue, width: 2.0),
-                ),
-                enabledBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.textGrey, width: 2.0),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Password',
-              style: sanFranciscoRegular.copyWith(
-                fontSize: 15,
-                color: AppColors.textGrey,
-              ),
-            ),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Password',
-                labelStyle: TextStyle(
-                  color: Colors.grey[800],
-                  fontSize: 16,
-                ),
-                floatingLabelBehavior: FloatingLabelBehavior.never,
-                border: const UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: AppColors.textGrey,
-                  ),
-                ),
-                focusedBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue, width: 2.0),
-                ),
-                enabledBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.textGrey, width: 2.0),
-                ),
-              ),
-            ),
+            const LoginForm(),
             const SizedBox(height: 28),
-            Center(
-              child: SizedBox(
-                width: 300,
-                child: ElevatedButton(
-                  onPressed: () {
-                    context.router.push(const NavBarRoute());
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.green,
-                    onPrimary: Colors.white,
-                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                  ),
-                  child: Text(
-                    'LOGIN',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 120),
             Center(
               child: Text(
                 'Don\'t have an account?',

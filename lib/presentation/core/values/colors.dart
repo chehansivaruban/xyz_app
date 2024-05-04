@@ -49,7 +49,7 @@ mixin AppColors {
 
   static Color notificationUnreadColor = const Color(0xfff4e9ea);
 
-  static Color primaryGreen = const Color(0xff41c947);
+  static Color primaryGreen = const Color(0xff06da9f);
   static Color darkestGreen = const Color(0xff096b0d);
   static Color lightestGreen = const Color(0xffa2ffa6);
   static Color containerWhite = const Color(0xfff4f4f4);

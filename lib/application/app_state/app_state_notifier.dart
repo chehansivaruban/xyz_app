@@ -1,9 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:xyz_app/presentation/routes/app_router.gr.dart';
 
 import '../../../domain/core/values/constants.dart';
 import '../../../utils/log_utils.dart';
+import '../../domain/authentication/login/login_response.dart';
 import '../../domain/core/i_local_repository.dart';
+import '../../presentation/core/app.dart';
 import '../../utils/string_extensions.dart';
 import 'app_state.dart';
 
@@ -28,6 +31,7 @@ class AppStateNotifier extends StateNotifier<AppState> {
   Future<void> appStart() async {
     _logUtils.log("appStart : before state : $state");
     state = state.copyWith(
+      isLoading: true,
       isAppStarted: none(),
     );
     final isLoggedIn = (await _localRepository.read(StorageKeys.isLoggedIn))
@@ -36,30 +40,22 @@ class AppStateNotifier extends StateNotifier<AppState> {
 
     if (!isLoggedIn) {
       state = state.copyWith(
+        isLoading: false,
         loggedIn: false,
         isAppStarted: some(true),
       );
       _logUtils.log("appStart : after state !isLoggedIn : $state");
-      //TODO: Find a better solution for this
-      // App.appRouter.replaceAll(
-      //   const [
-      //     OnboardingRoute(),
-      //   ],
-      // );
+
       return;
     } else {
       //fetch the data from local storage and update the state
       final token =
           (await _localRepository.read(StorageKeys.token)).getOrElse(() => '');
 
-      final refreshToken =
-          (await _localRepository.read(StorageKeys.refreshToken))
-              .getOrElse(() => '');
-
       state = state.copyWith(
+        isLoading: false,
         loggedIn: isLoggedIn,
         token: token,
-        refreshToken: refreshToken,
         isAppStarted: some(true),
       );
 
@@ -67,8 +63,31 @@ class AppStateNotifier extends StateNotifier<AppState> {
     }
   }
 
+  Future<void> login(LoginResponse authResponse) async {
+    _logUtils.log("login : authResponse : $authResponse");
+    await _localRepository.createOrUpdate(
+        StorageKeys.isLoggedIn, true.toString());
+
+    await _localRepository.createOrUpdate(
+        StorageKeys.token, authResponse.accessToken);
+
+    // await _localRepository.createOrUpdate(
+    //     StorageKeys.refreshToken, authResponse.accessToken);
+
+    state = state.copyWith(
+      loggedIn: true,
+      token: authResponse.accessToken,
+      // refreshToken: authResponse.refreshToken,
+      isAppStarted: some(true),
+    );
+    App.appRouter.replaceAll(
+      const [
+        NavBarRoute(),
+      ],
+    );
+  }
+
   Future<void> logout() async {
     await _localRepository.deleteLogin();
-    state = AppState.initial();
   }
 }

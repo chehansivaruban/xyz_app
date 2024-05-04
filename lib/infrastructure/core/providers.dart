@@ -34,9 +34,11 @@ final dioProvider = Provider<Dio>((ref) {
   );
 
   var interceptor = LogInterceptor(
-    responseBody: false,
-    responseHeader: false,
-    request: false,
+    responseBody: true,
+    responseHeader: true,
+    request: true,
+    requestHeader: true,
+    requestBody: true,
   );
 
   if (Config.isDebugMode &&

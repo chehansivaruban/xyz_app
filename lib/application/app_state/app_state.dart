@@ -7,6 +7,7 @@ part 'app_state.freezed.dart';
 class AppState with _$AppState {
   const factory AppState({
     // main stated of the app
+    required bool isLoading,
     required bool loggedIn,
     required String token,
     required String refreshToken,
@@ -14,6 +15,7 @@ class AppState with _$AppState {
   }) = _AppState;
 
   factory AppState.initial() => AppState(
+        isLoading: true,
         loggedIn: false,
         token: '',
         refreshToken: '',
