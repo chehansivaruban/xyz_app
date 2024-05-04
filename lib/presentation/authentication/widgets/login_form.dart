@@ -1,8 +1,14 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:xyz_app/utils/failure_utils.dart';
 
+import '../../../application/app_state/app_state_provider.dart';
 import '../../../application/authentication/atuthentication_state_provider.dart';
+import '../../../application/core/failure/failure_provider.dart';
+import '../../../domain/core/failure.dart';
+import '../../core/alerts/alert_utils.dart';
 import '../../core/values/colors.dart';
 import '../../core/values/text_styles.dart';
 import '../../core/widgets/custom_textfield.dart';
@@ -15,6 +21,57 @@ class LoginForm extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isLoading = ref.watch(
+        authenticationNotifierProvider.select((value) => value.isLoading));
+    ref.listen<Option<Failure>>(
+      authenticationNotifierProvider.select((value) => value.responseFailure),
+      (_, failureOption) {
+        failureOption.fold(
+          () {},
+          (failure) {
+            ref.read(failureNotifierProvider.notifier).handleFailure(failure);
+          },
+        );
+      },
+    );
+    ref.listen<Option<Failure>>(
+      failureNotifierProvider.select((value) => value.latestFailure),
+      (_, failureOption) {
+        failureOption.fold(
+          () {},
+          (failure) {
+            failure.maybeWhen(
+              orElse: () {
+                AlertUtils.showFailureDialog(
+                  context: context,
+                  failure: failure,
+                  onDismiss: () {
+                    ref
+                        .read(failureNotifierProvider.notifier)
+                        .dismissFailure(failure);
+                  },
+                );
+              },
+              authentication: (authFailure) {
+                AlertUtils.showInfoDialog(
+                  actionButtonLabel: "Back",
+                  context: context,
+                  message: failure.toErrorString(),
+                  onActionPressed: (contxt) {
+                    ref.read(appStateNotifierProvider.notifier).logout();
+                    contxt.router.replaceAll(
+                      [
+                        const SplashRoute(),
+                      ],
+                    );
+                  },
+                );
+              },
+            );
+          },
+        );
+      },
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -75,14 +132,21 @@ class LoginForm extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(5.0),
                 ),
               ),
-              child: const Text(
-                'LOGIN',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              child: isLoading
+                  ? CircularProgressIndicator(
+                      backgroundColor: AppColors.darkestGreen,
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                        Colors.white,
+                      ),
+                    )
+                  : const Text(
+                      'LOGIN',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
             ),
           ),
         ),
