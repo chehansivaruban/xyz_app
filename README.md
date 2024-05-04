@@ -1,16 +1,5 @@
-# xyz_app
+GitHub Repository: https://github.com/chehansivaruban/xyz_app.git
 
-A new Flutter project.
+Notion Documentation: https://nosy-baritone-293.notion.site/XYZ-App-c5e6d3e949844ca3a803a11252ac6a37?pvs=4
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Google Drive Link for the APK: https://drive.google.com/drive/folders/13-wY8KvbnPYND0f5iSIoc8XBR7kNwzHJ?usp=sharing
