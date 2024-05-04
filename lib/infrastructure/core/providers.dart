@@ -10,6 +10,7 @@ import '../../domain/core/i_local_repository.dart';
 import 'api_helper.dart';
 import 'connectivity.dart';
 import 'local_repository.dart';
+import 'refresh_token_inteceptor.dart';
 
 final localStorageProvider = Provider<FlutterSecureStorage>((ref) {
   AndroidOptions getAndroidOptions() => const AndroidOptions(
@@ -25,6 +26,8 @@ final localRepositoryProvider = Provider<ILocalRepository>(
 );
 
 final dioProvider = Provider<Dio>((ref) {
+  final localRepository = ref.watch(localRepositoryProvider);
+  final refreshTokenInterceptor = RefreshTokenInterceptor(localRepository);
   final dioClient = Dio(
     BaseOptions(
       baseUrl: Config.serverUrl,
@@ -45,6 +48,7 @@ final dioProvider = Provider<Dio>((ref) {
       Config.printNetLog &&
       !dioClient.interceptors.contains(interceptor)) {
     dioClient.interceptors.add(interceptor);
+    dioClient.interceptors.add(refreshTokenInterceptor);
   }
   if (!(Config.isDebugMode && Config.printNetLog) &&
       dioClient.interceptors.contains(interceptor)) {

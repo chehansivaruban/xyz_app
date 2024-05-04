@@ -1,80 +1,112 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:carousel_indicator/carousel_indicator.dart';
+import 'package:xyz_app/application/current_location/current_location_state_provider.dart';
+import 'package:xyz_app/presentation/core/values/colors.dart';
+import 'package:xyz_app/presentation/core/values/images.dart';
+import 'package:xyz_app/presentation/core/values/style_constants.dart';
+import 'package:xyz_app/presentation/core/values/text_styles.dart';
 
-import '../../core/values/images.dart';
-
-class HomeHeader extends StatefulWidget {
-  HomeHeader({
-    super.key,
-  });
-
-  @override
-  State<HomeHeader> createState() => _HomeHeaderState();
-}
-
-class _HomeHeaderState extends State<HomeHeader> {
-  int _currentIndex = 0;
-  final List<String> imgList = [
-    'https://via.placeholder.com/400x200/FF0000/FFFFFF',
-    'https://via.placeholder.com/400x200/00FF00/FFFFFF',
-    'https://via.placeholder.com/400x200/0000FF/FFFFFF',
-  ];
+class HomeHeader extends HookConsumerWidget {
+  const HomeHeader({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentIndex = useState(0);
+    final imgList = [
+      'https://via.placeholder.com/400x150/ebeef1/ebeef1',
+      'https://via.placeholder.com/400x150/ebeef1/ebeef1',
+      'https://via.placeholder.com/400x150/ebeef1/ebeef1',
+    ];
+    final currentCity = ref.watch(currentLocationNotifierProvider).currentCity;
+
     return SizedBox(
-      height: 275,
       width: double.infinity,
       child: Stack(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 150,
             width: double.infinity,
             child: AppImages.homeHeader,
           ),
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: 50,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: TextField(
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.lightGreen[100],
-                            prefixIcon: Icon(Icons.search, color: Colors.grey),
-                            hintText: 'Search product',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: BorderSide.none,
-                            ),
+              const SizedBox(height: 5),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.location_on,
+                    color: Colors.green,
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    currentCity,
+                    style: sanFranciscoBold.copyWith(
+                      color: AppColors.black,
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 5),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: AppPaddings.innerPadding),
+                height: 40,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 8,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.only(top: 5),
+                          filled: true,
+                          fillColor: AppColors.white,
+                          prefixIcon: const Icon(
+                            Icons.search,
+                            color: Colors.grey,
+                          ),
+                          hintText: 'Search product',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7),
+                            borderSide: BorderSide.none,
                           ),
                         ),
                       ),
-                      IconButton(
-                        icon: Icon(Icons.favorite, color: Colors.green),
-                        onPressed: () {},
+                    ),
+                    const Expanded(
+                      flex: 2,
+                      child: SizedBox(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Icon(
+                              Icons.favorite,
+                              color: AppColors.white,
+                            ),
+                            SizedBox(width: 10),
+                            Icon(
+                              Icons.shopping_cart,
+                              color: AppColors.white,
+                            ),
+                          ],
+                        ),
                       ),
-                      IconButton(
-                        icon: Icon(Icons.shopping_cart, color: Colors.green),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
+              const SizedBox(height: 10),
               SizedBox(
-                height: 200,
+                height: 150,
+                width: double.infinity,
                 child: CarouselSlider(
                   options: CarouselOptions(
                     onPageChanged: (index, reason) {
-                      setState(() {
-                        _currentIndex = index;
-                      });
+                      currentIndex.value = index;
                     },
                     autoPlay: true,
                     aspectRatio: 2.0,
@@ -82,21 +114,53 @@ class _HomeHeaderState extends State<HomeHeader> {
                   ),
                   items: imgList
                       .map((item) => Container(
-                            child: Center(
-                                child: Image.network(item,
-                                    fit: BoxFit.fill, width: 1000)),
+                            margin: const EdgeInsets.symmetric(vertical: 5),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  spreadRadius: 0,
+                                  blurRadius: 2,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(5),
+                              child: Image.network(
+                                item,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
                           ))
                       .toList(),
                 ),
               ),
-              CarouselIndicator(
-                cornerRadius: 30,
-                height: 10,
-                width: 10,
-                activeColor: Colors.black,
-                count: imgList.length,
-                index: _currentIndex,
-                color: Colors.brown,
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: AppPaddings.innerPadding),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CarouselIndicator(
+                      cornerRadius: 30,
+                      height: 8,
+                      width: 8,
+                      activeColor: AppColors.primaryGreen,
+                      count: imgList.length,
+                      index: currentIndex.value,
+                      color: AppColors.buttonGrey,
+                    ),
+                    Text(
+                      "See more",
+                      style: sanFranciscoRegular.copyWith(
+                        color: AppColors.primaryGreen,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
