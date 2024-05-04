@@ -1,5 +1,6 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:geocoding/geocoding.dart';
 
 import '../../utils/log_utils.dart';
 import 'current_location_state.dart';
@@ -69,10 +70,13 @@ class CurrentLocationStateNotifier extends StateNotifier<CurrentLocationState> {
     if (hasPermission) {
       final position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
       if (position.longitude != state.currentPossition.longitude ||
           position.latitude != state.currentPossition.latitude) {
         state = state.copyWith(
           currentPossition: position,
+          currentCity: placemarks[0].locality ?? "",
         );
         _logUtils.log(
             "getCurrentLocation :: lattitude ${position.latitude} longitude ${position.longitude}");

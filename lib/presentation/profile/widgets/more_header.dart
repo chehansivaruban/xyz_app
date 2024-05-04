@@ -36,13 +36,12 @@ class MoreHeader extends HookConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    width:
-                        56, // Set the width to match the height for a perfect circle
-                    height: 56,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.black,
+                  ClipOval(
+                    child: Image.network(
+                      'https://i.pravatar.cc/300',
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.cover,
                     ),
                   ),
                   const SizedBox(height: 16),
