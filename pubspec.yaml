@@ -46,3 +46,20 @@ flutter:
   assets:
     - assets/
     - assets/images/
+
+  fonts:
+    - family: SanFranciscoBold
+      fonts:
+        - asset: assets/fonts/sanFrancisco/SFUIDisplay-Bold.ttf
+
+    - family: SanFranciscoProBold
+      fonts:
+        - asset: assets/fonts/sanFrancisco/SF-Pro-Text-Bold.otf
+
+    - family: SanFranciscoProLight
+      fonts:
+        - asset: assets/fonts/sanFrancisco/SF-Pro-Text-Light.otf
+
+    - family: SanFranciscoProRegular
+      fonts:
+        - asset: assets/fonts/sanFrancisco/SF-Pro-Text-Regular.otf
